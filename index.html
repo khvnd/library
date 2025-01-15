@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Система отзывов</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .review-container { margin-top: 20px; }
+    .product { margin-bottom: 20px; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <h1>Отзывы о продуктах</h1>
+
+  <div id="products"></div>
+
+  <h2>Оставить отзыв</h2>
+  <select id="productSelect"></select>
+  <textarea id="reviewInput" rows="5" cols="50" placeholder="Введите ваш отзыв..."></textarea>
+  <br>
+  <button onclick="addReview()">Добавить отзыв</button>
+  <p id="error" class="error"></p>
+
+  <script>
+    const initialData = [
+      {
+        product: "Apple iPhone 13",
+        reviews: [
+          { id: "1", text: "Отличный телефон! Батарея держится долго." },
+          { id: "2", text: "Камера супер, фото выглядят просто потрясающе." },
+        ],
+      },
+      {
+        product: "Samsung Galaxy Z Fold 3",
+        reviews: [
+          { id: "3", text: "Интересный дизайн, но дорогой." },
+        ],
+      },
+      {
+        product: "Sony PlayStation 5",
+        reviews: [
+          { id: "4", text: "Люблю играть на PS5, графика на высоте." },
+        ],
+      },
+    ];
+
+    function renderProducts() {
+      const productsDiv = document.getElementById('products');
+      const productSelect = document.getElementById('productSelect');
+      productsDiv.innerHTML = '';
+      productSelect.innerHTML = '';
+
+      initialData.forEach((product, index) => {
+        // Добавляем продукт в выпадающий список
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = product.product;
+        productSelect.appendChild(option);
+
+        // Отображаем отзывы
+        const productDiv = document.createElement('div');
+        productDiv.classList.add('product');
+        productDiv.innerHTML = `<h3>${product.product}</h3>`;
+
+        const reviewContainer = document.createElement('div');
+        reviewContainer.classList.add('review-container');
+
+        product.reviews.forEach(review => {
+          const p = document.createElement('p');
+          p.textContent = review.text;
+          reviewContainer.appendChild(p);
+        });
+
+        productDiv.appendChild(reviewContainer);
+        productsDiv.appendChild(productDiv);
+      });
+    }
+
+    function addReview() {
+      const productIndex = document.getElementById('productSelect').value;
+      const reviewInput = document.getElementById('reviewInput');
+      const errorDiv = document.getElementById('error');
+      const reviewText = reviewInput.value.trim();
+
+      errorDiv.textContent = '';
+
+      try {
+        if (reviewText.length < 50 || reviewText.length > 500) {
+          throw new Error('Отзыв должен содержать от 50 до 500 символов.');
+        }
+
+        const newReview = {
+          id: Date.now().toString(),
+          text: reviewText,
+        };
+
+        initialData[productIndex].reviews.push(newReview);
+        reviewInput.value = '';
+        renderProducts();
+      } catch (error) {
+        errorDiv.textContent = error.message;
+      }
+    }
+
+    window.onload = renderProducts;
+  </script>
+</body>
+</html>
