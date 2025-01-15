@@ -53,13 +53,13 @@
       productSelect.innerHTML = '';
 
       initialData.forEach((product, index) => {
-        // Добавляем продукт в выпадающий список
+       
         const option = document.createElement('option');
         option.value = index;
         option.textContent = product.product;
         productSelect.appendChild(option);
 
-        // Отображаем отзывы
+    
         const productDiv = document.createElement('div');
         productDiv.classList.add('product');
         productDiv.innerHTML = `<h3>${product.product}</h3>`;
